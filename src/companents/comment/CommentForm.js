@@ -39,10 +39,11 @@ export default function CommentForm(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
       },
       body: JSON.stringify({
         postId: post.id,
-        userId: 12,
+        userId: localStorage.getItem("currentUser"),
         comment: text,
       }),
     })

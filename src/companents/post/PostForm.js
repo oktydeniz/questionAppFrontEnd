@@ -52,7 +52,10 @@ export default function PostForm(props) {
   const savePost = () => {
     fetch("/posts", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+      },
       body: JSON.stringify({
         title: title,
         userId: userId,

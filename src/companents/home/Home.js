@@ -46,14 +46,16 @@ export default function Home() {
   } else {
     return (
       <div fixed className={classes.container}>
+        {localStorage.getItem("currentUser") == null ? null : 
         <PostForm
           key={12}
-          userId={12}
+          userId={localStorage.getItem("currentUser")}
           refreshData={refreshData}
-          post={{ userName: "Oktay" }}
+          post={{ userName: localStorage.getItem("userName") }}
         />
+      }
         {postList.map((post) => (
-          <Post userId={12} key={post.id} post={post}></Post>
+          <Post userId={localStorage.getItem("currentUser")} key={post.id} post={post}></Post>
         ))}
       </div>
     );
