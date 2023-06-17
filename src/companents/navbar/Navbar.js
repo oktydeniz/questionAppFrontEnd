@@ -15,11 +15,11 @@ function Navbar() {
   let navigate = useNavigate();
 
   const onclick = (e) => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("currentUser")
-    localStorage.removeItem("userName")
-    navigate(0)
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("userName");
+    navigate(0);
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -44,16 +44,21 @@ function Navbar() {
             </Link>
           </Typography>
           <Typography variant="h6" component="div">
-            {localStorage.getItem("currentUser") == null ? <Link className="link" to={{ pathname: "/auth"}}>
-              Login/Register
-            </Link> :
-            <>
-            <IconButton className="link" onClick={(e) => onclick(e)}> <LockOpen style={{color: "white"}}></LockOpen></IconButton>
-            <Link className="link" to={{ pathname: "/users/" + userId }}>
-            Profile
-            </Link> 
-            </>
-             }
+            {localStorage.getItem("currentUser") == null ? (
+              <Link className="link" to={{ pathname: "/auth" }}>
+                Login/Register
+              </Link>
+            ) : (
+              <>
+                <IconButton className="link" onClick={(e) => onclick(e)}>
+                  {" "}
+                  <LockOpen style={{ color: "white" }}></LockOpen>
+                </IconButton>
+                <Link className="link" to={{ pathname: "/users/" + userId }}>
+                  Profile
+                </Link>
+              </>
+            )}
           </Typography>
         </Toolbar>
       </AppBar>

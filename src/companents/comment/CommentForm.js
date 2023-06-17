@@ -35,11 +35,11 @@ export default function CommentForm(props) {
     setText("");
   };
   const sendComment = () => {
-    fetch("comments", {
+    fetch("/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
+        Authorization: localStorage.getItem("token"),
       },
       body: JSON.stringify({
         postId: post.id,

@@ -45,7 +45,7 @@ export default function Post(props) {
   const { post, userId } = props;
   const [expanded, setExpanded] = React.useState(false);
   const [comments, setComments] = React.useState([]);
-  let likeDisabled  = localStorage.getItem("currentUser") == null ? true : false
+  let likeDisabled = localStorage.getItem("currentUser") == null ? true : false;
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isLiked, setIsLiked] = React.useState(false);
   const [likeCount, setLikeCount] = React.useState(post.likes.length);
@@ -97,7 +97,7 @@ export default function Post(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
+        Authorization: localStorage.getItem("token"),
       },
       body: JSON.stringify({
         postId: post.id,
@@ -114,7 +114,7 @@ export default function Post(props) {
     fetch("/likes/" + likeId, {
       method: "DELETE",
       headers: {
-        "Authorization": localStorage.getItem("token")
+        Authorization: localStorage.getItem("token"),
       },
     }).catch((error) => {
       console.log(error);
@@ -122,7 +122,9 @@ export default function Post(props) {
   };
 
   const checkLikes = () => {
-    var control = post.likes.find((like) => ""+like.userId === localStorage.getItem("currentUser"));
+    var control = post.likes.find(
+      (like) => "" + like.userId === localStorage.getItem("currentUser")
+    );
     if (control != null) {
       setLikeId(control.id);
       setIsLiked(true);
@@ -164,7 +166,11 @@ export default function Post(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-          <IconButton disabled={likeDisabled} onClick={handleClick} aria-label="add to favorites">
+        <IconButton
+          disabled={likeDisabled}
+          onClick={handleClick}
+          aria-label="add to favorites"
+        >
           <FavoriteIcon style={isLiked ? { color: "red" } : null} />
         </IconButton>
         {likeCount}
@@ -190,7 +196,7 @@ export default function Post(props) {
                 ></Comments>
               ))
             : "Loading"}
-            {likeDisabled ? null : <CommentForm post={post}></CommentForm>}
+          {likeDisabled ? null : <CommentForm post={post}></CommentForm>}
         </Container>
       </Collapse>
     </Card>
