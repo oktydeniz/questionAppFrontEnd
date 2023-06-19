@@ -13,8 +13,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-
-export default function AvatarUI({ userAvatarId }) {
+import { PuthWithAuth } from "../../services/HttpService";
+export default function AvatarUI({ userAvatarId, userId, userName }) {
   const [open, setOpen] = React.useState(false);
   const [avatarId, setAvatarId] = React.useState(userAvatarId);
 
@@ -27,15 +27,8 @@ export default function AvatarUI({ userAvatarId }) {
     fetchAvatar();
   };
   const fetchAvatar = () => {
-    fetch("/users/" + localStorage.getItem("currentUser"), {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        avatar: avatarId,
-      }),
+    PuthWithAuth("/users/" + localStorage.getItem("currentUser"),{
+      avatar: avatarId,
     })
       .then((res) => res.json())
       .then(
@@ -66,16 +59,18 @@ export default function AvatarUI({ userAvatarId }) {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            userName
+            {userName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             User Info
           </Typography>
         </CardContent>
         <CardActions>
-          <Button onClick={handleOpen} size="small">
+          {
+            localStorage.getItem("currentUser") == userId ? <Button onClick={handleOpen} size="small">
             Change Avatar
-          </Button>
+          </Button> : null
+          }
           <BasicModal
             open={open}
             handleOpen={handleOpen}

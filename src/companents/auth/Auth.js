@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./auth.scss";
 import { Button, FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { PostWithAuth } from "../../services/HttpService";
 export default function Auth(){
     const [userName, setUserName] = React.useState("")
     const [password, setPassword] = React.useState("")
@@ -21,15 +21,9 @@ export default function Auth(){
     }
 
     const refreshUser = (action) => {
-        fetch("/auth/" + action, {
-            method: "POST",
-            headers:{
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                userName: userName,
-                password: password,
-            })
+        PostWithAuth("/auth/" + action,{
+            userName: userName,
+            password: password,
         })
           .then((res) => res.json())
           .then(

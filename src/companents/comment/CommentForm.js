@@ -3,6 +3,8 @@ import { OutlinedInput, makeStyles } from "@material-ui/core";
 import { Button, CardContent, InputAdornment } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { Link } from "react-router-dom";
+import { PostWithAuth } from "../../services/HttpService";
+
 const useStyles = makeStyles((theme) => ({
   comment: {
     display: "flex",
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CommentForm(props) {
-  const { comment, post } = props;
+  const { comment, post, setCommentRefresh } = props;
 
   const [text, setText] = React.useState("");
   const classes = useStyles();
@@ -33,20 +35,14 @@ export default function CommentForm(props) {
   const handleSubmit = (value) => {
     sendComment();
     setText("");
+    setCommentRefresh();
   };
   const sendComment = () => {
-    fetch("/comments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        postId: post.id,
-        userId: localStorage.getItem("currentUser"),
-        comment: text,
-      }),
-    })
+    PostWithAuth("/comments", {
+      postId: post.id,
+      userId: localStorage.getItem("currentUser"),
+      comment: text,
+    } )
       .then((res) => res.json())
       .catch((err) => console.log(err));
   };
@@ -63,7 +59,7 @@ export default function CommentForm(props) {
               to={{ pathname: "/users/" + post.userId }}
             >
               <Avatar className={classes.small} aria-label="recipe">
-                {post.userName.charAt(0).toUpperCase()}
+              {post.userName!= null ? post.userName.charAt(0).toUpperCase() : null}
               </Avatar>
             </Link>
           </InputAdornment>

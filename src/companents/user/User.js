@@ -4,19 +4,14 @@ import AvatarUI from "../avatar/Avatar";
 import UserActivity from "../useractivity/UserActivity";
 import "./user.scss";
 import { makeStyles } from "@material-ui/core";
+import { GetWithAuth } from "../../services/HttpService";
 
 function User() {
   const { userId } = useParams();
   const [user, setUser] = React.useState();
 
   const fetchUser = () => {
-    fetch("/users/" + userId, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token"),
-      },
-    })
+    GetWithAuth("/users/" + userId,)
       .then((res) => res.json())
       .then(
         (res) => {
@@ -35,8 +30,10 @@ function User() {
 
   return (
     <div className="section">
-      {user != null ? <AvatarUI userAvatarId={user.avatar}></AvatarUI> : null}
-      <UserActivity key="user_activity" userId={userId}></UserActivity>
+      {user != null ? <AvatarUI userName={user.userName} userAvatarId={user.avatar} userId={userId} ></AvatarUI> : null}
+      {
+        localStorage.getItem("currentUser") == userId ? <UserActivity key="user_activity" userId={userId}></UserActivity> : null 
+      }
     </div>
   );
 }

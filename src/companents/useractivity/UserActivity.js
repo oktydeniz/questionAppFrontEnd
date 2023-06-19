@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import Post from "../post/post";
+import { PostWithAuth, GetWithAuth } from "../../services/HttpService";
 
 export default function UserActivity({ userId }) {
   const [page, setPage] = React.useState(0);
@@ -22,13 +23,7 @@ export default function UserActivity({ userId }) {
   const [open, setOpen] = React.useState(false);
 
   const handleSelectedPost = (id) => {
-    fetch("/posts/" + id, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-    })
+    GetWithAuth("/posts/" + id)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -58,13 +53,7 @@ export default function UserActivity({ userId }) {
   };
 
   const getActivities = () => {
-    fetch("/users/activity/" + userId, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token"),
-      },
-    })
+    GetWithAuth("/users/activity/" + userId)
       .then((res) => res.json())
       .then(
         (result) => {

@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core";
 import { Button, InputAdornment, OutlinedInput } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { PostWithAuth } from "../../services/HttpService";
 
 const classes = makeStyles((theme) => ({
   links: {
@@ -50,17 +51,10 @@ export default function PostForm(props) {
   };
 
   const savePost = () => {
-    fetch("/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        title: title,
-        userId: userId,
-        text: text,
-      }),
+    PostWithAuth("/posts", {
+      title: title,
+      userId: userId,
+      text: text,
     })
       .then((response) => {
         response.json();
@@ -115,7 +109,7 @@ export default function PostForm(props) {
                 }}
                 aria-label="recipe"
               >
-                {post.userName.charAt(0).toUpperCase()}
+                {post.userName != null ? post.userName.charAt(0).toUpperCase() : null}
               </Avatar>
             </Link>
           }

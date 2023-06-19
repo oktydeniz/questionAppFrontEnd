@@ -37,7 +37,7 @@ export default function Home() {
 
   useEffect(() => {
     refreshData();
-  }, [postList]);
+  }, []);
 
   if (error) {
     return <>error</>;

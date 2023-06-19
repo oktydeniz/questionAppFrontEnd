@@ -37,7 +37,7 @@ export default function Comments(props) {
               to={{ pathname: "/users/" + post.userId }}
             >
               <Avatar className={classes.small} aria-label="recipe">
-                {post.userName.charAt(0).toUpperCase()}
+              {post.userName!= null ? post.userName.charAt(0).toUpperCase() : null}
               </Avatar>
             </Link>
           </InputAdornment>

@@ -20,6 +20,7 @@ import { makeStyles } from "@material-ui/core";
 import { Container } from "@mui/system";
 import Comments from "../comment/Comment";
 import CommentForm from "../comment/CommentForm";
+import { PostWithAuth, DeleteWithAuth } from "../../services/HttpService";
 
 const classes = makeStyles((theme) => ({
   links: {
@@ -52,6 +53,7 @@ export default function Post(props) {
   const [error, setError] = React.useState(false);
   const [likeId, setLikeId] = React.useState(null);
   const isInitializedMount = React.useRef(true);
+  const [refresh, setRefresh] = React.useState(false);
   const handleExpandClick = () => {
     setExpanded(!expanded);
     refreshData();
@@ -71,7 +73,12 @@ export default function Post(props) {
           setError(true);
         }
       );
+    setRefresh(false);
   };
+
+  const setCommentRefresh = () => {
+    setRefresh(true);
+  }
 
   React.useEffect(() => {
     if (isInitializedMount.current) {
@@ -79,7 +86,7 @@ export default function Post(props) {
     } else {
       refreshData();
     }
-  }, [comments]);
+  }, [refresh]);
 
   const handleClick = () => {
     setIsLiked(!isLiked);
@@ -93,30 +100,16 @@ export default function Post(props) {
   };
 
   const saveLike = () => {
-    fetch("/likes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        postId: post.id,
-        userId: localStorage.getItem("currentUser"),
-      }),
-    })
-      .then((response) => response.json())
-      .catch((error) => {
+    PostWithAuth("/likes",{
+      postId: post.id,
+      userId: localStorage.getItem("currentUser"),
+    }).then((response) => response.json()).catch((error) => {
         console.log(error);
       });
   };
 
   const deleteLike = () => {
-    fetch("/likes/" + likeId, {
-      method: "DELETE",
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-    }).catch((error) => {
+    DeleteWithAuth("/likes/" + likeId).catch((error) => {
       console.log(error);
     });
   };
@@ -150,7 +143,7 @@ export default function Post(props) {
               }}
               aria-label="recipe"
             >
-              {post.userName.charAt(0).toUpperCase()}
+              {post.userName!= null ? post.userName.charAt(0).toUpperCase() : null}
             </Avatar>
           </Link>
         }
@@ -196,7 +189,7 @@ export default function Post(props) {
                 ></Comments>
               ))
             : "Loading"}
-          {likeDisabled ? null : <CommentForm post={post}></CommentForm>}
+          {likeDisabled ? null : <CommentForm setCommentRefresh={setCommentRefresh} post={post}></CommentForm>}
         </Container>
       </Collapse>
     </Card>
