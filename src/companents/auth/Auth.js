@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./auth.scss";
 import { Button, FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { PostWithAuth } from "../../services/HttpService";
+import { PostWithoutAuth } from "../../services/HttpService";
 export default function Auth(){
     const [userName, setUserName] = React.useState("")
     const [password, setPassword] = React.useState("")
@@ -21,14 +21,15 @@ export default function Auth(){
     }
 
     const refreshUser = (action) => {
-        PostWithAuth("/auth/" + action,{
+        PostWithoutAuth("/auth/" + action,{
             userName: userName,
             password: password,
         })
           .then((res) => res.json())
           .then(
             (result) => {
-                localStorage.setItem("token", result.message);
+                localStorage.setItem("token", result.accessToken);
+                localStorage.setItem("refreshToken", result.refreshToken);
                 localStorage.setItem("currentUser", result.userId);
                 localStorage.setItem("userName", userName)
                 navigate(0)

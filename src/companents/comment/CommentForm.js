@@ -3,8 +3,8 @@ import { OutlinedInput, makeStyles } from "@material-ui/core";
 import { Button, CardContent, InputAdornment } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { Link } from "react-router-dom";
-import { PostWithAuth } from "../../services/HttpService";
-
+import { PostWithAuth, RefreshToken } from "../../services/HttpService";
+import { useNavigate } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   comment: {
     display: "flex",
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CommentForm(props) {
   const { comment, post, setCommentRefresh } = props;
-
+  let navigate = useNavigate();
   const [text, setText] = React.useState("");
   const classes = useStyles();
 
@@ -43,9 +43,39 @@ export default function CommentForm(props) {
       userId: localStorage.getItem("currentUser"),
       comment: text,
     } )
-      .then((res) => res.json())
-      .catch((err) => console.log(err));
+      .then((res) => {
+        if(!res.ok) {
+            RefreshToken()
+            .then((res) => { if(!res.ok) {
+                logout();
+            } else {
+               return res.json()
+            }})
+            .then((result) => {
+                console.log(result)
+
+                if(result != undefined){
+                    localStorage.setItem("token",result.accessToken);
+                    sendComment();
+                    setCommentRefresh();
+                }})
+            .catch((err) => {
+                console.log(err)
+            })
+        } else 
+        res.json()
+    })
+      .catch((err) => {
+        console.log(err)
+      })
   };
+  const logout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("currentUser")
+    localStorage.removeItem("refreshToken")
+    localStorage.removeItem("userName")
+    navigate.go(0)
+  }
   return (
     <CardContent className={classes.comment}>
       <OutlinedInput

@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import Post from "../post/post";
-import { PostWithAuth, GetWithAuth } from "../../services/HttpService";
+import {GetWithAuth } from "../../services/HttpService";
 
 export default function UserActivity({ userId }) {
   const [page, setPage] = React.useState(0);
